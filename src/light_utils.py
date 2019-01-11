@@ -1,6 +1,11 @@
 import time
 import threading
 import datetime as dt
+import pigpio
+
+RED = 22
+BLUE = 17
+GREEN = 6 
 
 def interpolate(l, r, t0, dt, t):
 	"""
@@ -8,10 +13,14 @@ def interpolate(l, r, t0, dt, t):
 	l and r based on the position of t between tl and tr
 	"""
 	p = (t-t0)/dt
-	return (p*(j-i) + i for i, j in zip(l, r))
+	return tuple(p*(j-i) + i for i, j in zip(l, r))
 
 def show(color):
-	print(*color)
+	pi = pigpio.pi()
+	pi.set_PWM_dutycycle(RED, color[0])
+	pi.set_PWM_dutycycle(GREEN, color[1])
+	pi.set_PWM_dutycycle(BLUE, color[2])
+	pi.stop()
 
 def now():
 	return dt.datetime.now()
@@ -55,8 +64,8 @@ def fade(colors, lengths, exit=None, steps=500, action=show):
 		time.sleep(pause)
 
 def sunrise(length=dt.timedelta(seconds=30), exit=None, steps=500, action=show):
-	colors = [(0,0,0), (255,0,0), (255,225,0), (255,255,255)]
-	lengths = [length/len(colors)]*(len(colors))
+	colors = [(0,0,0), (255,0,0), (255,200,0), (255,255,255)]
+	lengths = [length/len(colors)]*(len(colors)-1)
 
 	fade(colors, lengths, exit=exit, steps=steps, action=action)
 
