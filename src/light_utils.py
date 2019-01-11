@@ -13,11 +13,11 @@ def interpolate(l, r, t0, dt, t):
 	l and r based on the position of t between tl and tr
 	"""
 	p = (t-t0)/dt
-	return tuple(p*(j-i) + i for i, j in zip(l, r))
+	return [p*(j-i) + i for i, j in zip(l, r)]
 
 def show(color):
 	pi = pigpio.pi()
-#	print(f"{color[0]:.2}{color[1]:.2}{color[2]:.2}")
+	# print(f"{color[0]:.2}\t{color[1]:.2}\t{color[2]:.2}")
 	pi.set_PWM_dutycycle(RED, color[0])
 	pi.set_PWM_dutycycle(GREEN, color[1])
 	pi.set_PWM_dutycycle(BLUE, color[2])
@@ -40,6 +40,7 @@ def fade(colors, lengths, exit=None, steps=500, action=show):
 		return
 
 	n = len(lengths)
+	c = len(colors)
 	repeat = (len(colors) == n)
 
 	total = sum(lengths, dt.timedelta())
@@ -47,7 +48,6 @@ def fade(colors, lengths, exit=None, steps=500, action=show):
 
 	last = now()
 	i = 0
-
 	while True:
 		t = now()
 		if t - last > lengths[i]:
@@ -58,17 +58,30 @@ def fade(colors, lengths, exit=None, steps=500, action=show):
 				else:
 					break
 			last = last + lengths[i]
-		color = interpolate(colors[i], colors[(i+1) % n], last, lengths[i], t)
+		color = interpolate(colors[i], colors[(i+1) % c], last, lengths[i], t)
 		action(color)
 		if exit:
 			break
 		time.sleep(pause)
 
 def sunrise(length=dt.timedelta(seconds=30), exit=None, steps=500, action=show):
-	colors = [(0,0,0), (255,0,0), (255,200,0), (255,255,255)]
+	colors = [(0,0,0), (255,0,0), (255,180,0), (255,255,255)]
 	lengths = [length/len(colors)]*(len(colors)-1)
 
 	fade(colors, lengths, exit=exit, steps=steps, action=action)
 
+
+def main():
+	alarm_flag = True
+	start = dt.datetime(2019, 1, 11, 6, 25, 0)
+	while alarm_flag:
+		print('.')
+		if now() > start:
+			alarm_flag = False
+			t = threading.Thread(target=sunrise, kwargs={'length':dt.timedelta(minutes=30)})
+			t.start()
+		time.sleep(60)
+
+
 if __name__ == '__main__':
-	sunrise()
+	main()
