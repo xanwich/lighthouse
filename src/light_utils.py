@@ -17,6 +17,7 @@ def interpolate(l, r, t0, dt, t):
 
 def show(color):
 	pi = pigpio.pi()
+#	print(f"{color[0]:.2}{color[1]:.2}{color[2]:.2}")
 	pi.set_PWM_dutycycle(RED, color[0])
 	pi.set_PWM_dutycycle(GREEN, color[1])
 	pi.set_PWM_dutycycle(BLUE, color[2])
