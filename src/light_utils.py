@@ -93,7 +93,7 @@ def sunrise(length=dt.timedelta(seconds=30), exit=None, steps=500, action=show):
 
 
 def rainbow(length=dt.timedelta(seconds=9), exit=None, steps=300, action=show):
-	colors = [(255,0,0), (0,255,0), (0,0,255)]
+	colors = [(255,0,0), (255,128,0), (0,255,0), (0,255, 200), (0,0,255), (255, 0, 255)]
 	lengths = [length/len(colors)]*(len(colors))
 
 	fade(colors, lengths, exit=exit, steps=steps, action=action)
