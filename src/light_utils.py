@@ -36,7 +36,7 @@ def  flash(colors, delay, exit=None):
 	i = 0
 	l = len(colors)
 	while True:
-		show(color)
+		show(colors[i])
 		time.sleep(seconds)
 		show((0,0,0))
 
@@ -44,6 +44,7 @@ def  flash(colors, delay, exit=None):
 			break
 
 		time.sleep(seconds)
+		i = (i+1) % l
 
 
 def fade(colors, lengths, exit=None, steps=500, action=show):
