@@ -26,6 +26,26 @@ def show(color):
 def now():
 	return dt.datetime.now()
 
+def  flash(colors, delay, exit=None):
+	"""
+	flashes a list of colors for time on and time off
+	"""
+	seconds = delay
+	if isinstance(time, dt.timedelta):
+		seconds = time.total_seconds()
+	i = 0
+	l = len(colors)
+	while True:
+		show(color)
+		time.sleep(seconds)
+		show((0,0,0))
+
+		if exit:
+			break
+
+		time.sleep(seconds)
+
+
 def fade(colors, lengths, exit=None, steps=500, action=show):
 	"""
 	fades between colors with specified lengths 
