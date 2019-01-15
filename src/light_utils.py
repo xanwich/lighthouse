@@ -7,6 +7,14 @@ RED = 22
 BLUE = 17
 GREEN = 6 
 
+def hex_to_rgb(hex):
+	h = hex.lstrip('#')
+	return tuple(int(h[i:i+2], 16) for i in (0, 2 ,4))
+
+def rgb_to_hex(rgb):
+	return None
+
+
 def interpolate(l, r, t0, dt, t):
 	"""
 	this is a poorly written function that linearly interpolates
