@@ -7,6 +7,10 @@ RED = 22
 BLUE = 17
 GREEN = 6 
 
+class Stopper:
+	def __init__(self):
+		self.stop=False
+
 def hex_to_rgb(hex):
 	h = hex.lstrip('#')
 	return tuple(int(h[i:i+2], 16) for i in (0, 2 ,4))
@@ -48,7 +52,7 @@ def  flash(colors, delay, exit=None):
 		time.sleep(seconds)
 		show((0,0,0))
 
-		if exit:
+		if exit.stop:
 			break
 
 		time.sleep(seconds)
@@ -89,7 +93,7 @@ def fade(colors, lengths, exit=None, steps=500, action=show):
 			last = last + lengths[i]
 		color = interpolate(colors[i], colors[(i+1) % c], last, lengths[i], t)
 		action(color)
-		if exit:
+		if exit.stop:
 			break
 		time.sleep(pause)
 
