@@ -29,5 +29,6 @@ def make_rainbow():
 	stopper.stop = True
 	time.sleep(0.001)
 	if request.method == 'POST':
-		rainbow()
+		stopper.stop = False
+		rainbow(exit=stopper)
 	return render_template('index.html', current='Rainbow!!!')
