@@ -25,7 +25,7 @@ def change_color():
 	return render_template('index.html', current=color)
 
 @app.route('/rainbow.html', methods=['POST', 'GET'])
-def rainbow():
+def make_rainbow():
 	stopper.stop = True
 	time.sleep(0.001)
 	if request.method == 'POST':
