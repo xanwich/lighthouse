@@ -5,6 +5,7 @@ app = Flask(__name__)
 app.run(host='0.0.0.0', port=5050, debug=True)
 
 stopper = Stopper()
+sem = threading.BoundedSemaphore(value=1)
 
 @app.route('/')
 def index():
@@ -15,10 +16,13 @@ def change_color():
 	error = None
 	if request.method == 'POST':
 		stopper.stop = True
+		sem.acquire()
 		color = request.form['color']
 		color = hex_to_rgb(color)
-		show(color)
+		# show(color)
+		print(color)
 		stopper.stop = False
+		sem.release()
 		print(request.method)
 	else:
 		color = 'bad boy!'
@@ -30,5 +34,5 @@ def make_rainbow():
 	time.sleep(0.001)
 	if request.method == 'POST':
 		stopper.stop = False
-		rainbow(exit=stopper)
+		rainbow(exit=stopper, sem=sem, action=print)
 	return render_template('index.html', current='Rainbow!!!')
