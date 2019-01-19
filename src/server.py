@@ -19,8 +19,7 @@ def change_color():
 		sem.acquire()
 		color = request.form['color']
 		color = hex_to_rgb(color)
-		# show(color)
-		print(color)
+		show(color)
 		stopper.stop = False
 		sem.release()
 		print(request.method)
@@ -34,5 +33,5 @@ def make_rainbow():
 	time.sleep(0.001)
 	if request.method == 'POST':
 		stopper.stop = False
-		rainbow(exit=stopper, sem=sem, action=print)
+		rainbow(exit=stopper, sem=sem)
 	return render_template('index.html', current='Rainbow!!!')
