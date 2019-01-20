@@ -24,8 +24,8 @@
 		console.log(input_color)
 		console.log
 		var dict = {"color": input_color.toHEXString()};
-		var poop = JSON.stringify(dict);
-		req.send(poop);
+		var data = JSON.stringify(dict);
+		req.send(data);
 	}
 </script>
 
