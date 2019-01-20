@@ -1,5 +1,8 @@
 <!doctype html>
-<title>Pick A Color</title>
+<title>Lighthouse</title>
+<head>
+	<link rel="stylesheet" href="static/lighthouse_style.css">
+</head>
 <h1>Pick A Color</h1>
 <h2>{{ current }}</h2>
 <script src="/static/jscolor.js"></script>
@@ -22,7 +25,7 @@
 		console.log
 		var dict = {"color": input_color.toHEXString()};
 		var poop = JSON.stringify(dict);
-		// req.send(poop);
+		req.send(poop);
 	}
 </script>
 
