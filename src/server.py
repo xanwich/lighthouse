@@ -16,13 +16,14 @@ def change_color():
 	error = None
 	if request.method == 'POST':
 		stopper.stop = True
-		sem.acquire()
-		color = request.form['color']
+		form = request.get_json(force=True)
+		color = form['color']
 		color = hex_to_rgb(color)
+		sem.acquire()
 		show(color)
+		app.logger.debug(color)
 		stopper.stop = False
 		sem.release()
-		print(request.method)
 	else:
 		color = 'bad boy!'
 	return render_template('index.html', current=color)

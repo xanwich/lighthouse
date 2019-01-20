@@ -11,6 +11,22 @@ class Stopper:
 	def __init__(self):
 		self.stop=False
 
+def semaphorize(sem, logger=None):
+	def f_wrap(func):
+		def a_wrap(*args, **kwargs):
+			if logger:
+				logger(f'semaphore acquiring {func.__name__}')
+			sem.acquire()
+			if logger:
+				logger(f'semaphore acquired {func.__name__}')
+			func(*args, **kwargs)
+			sem.release()
+			if logger:
+				logger(f'semaphore released {func.__name__}')
+		return a_wrap
+	return f_wrap
+
+
 def hex_to_rgb(hex):
 	h = hex.lstrip('#')
 	return tuple(int(h[i:i+2], 16) for i in (0, 2 ,4))
