@@ -17,15 +17,19 @@
 		// }
 		req.open("POST", "/color.html", true);
 		req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-		// var dict = ;
-		req.send(JSON.stringify({"color": "#AAFF00"}));
+		// alert(input_color)
+		console.log(input_color)
+		console.log
+		var dict = {"color": input_color.toHEXString()};
+		var poop = JSON.stringify(dict);
+		// req.send(poop);
 	}
 </script>
 
 <body>
 
 <form action="/color.html" method="post">
-	<input class="jscolor {onFineChange:'send_color(this.jscolor)'}" name="color" value="{{ current }}">
+	<input class="jscolor {onFineChange:'send_color(this)'}" name="color" value="{{ current }}">
 </form>
 
 <form action="/rainbow.html" method="post">

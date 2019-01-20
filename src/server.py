@@ -17,6 +17,7 @@ def change_color():
 	if request.method == 'POST':
 		stopper.stop = True
 		form = request.get_json(force=True)
+		app.logger.debug(form)
 		color = form['color']
 		color = hex_to_rgb(color)
 		sem.acquire()
