@@ -1,12 +1,41 @@
 <!doctype html>
-<title>Pick A Color</title>
+<title>Lighthouse</title>
+<head>
+	<link rel="stylesheet" href="static/lighthouse_style.css">
+</head>
 <h1>Pick A Color</h1>
 <h2>{{ current }}</h2>
 <script src="/static/jscolor.js"></script>
+
+<script type="text/javascript">
+	function send_color(input_color) {
+		// alert(input_color);
+		var req = new XMLHttpRequest();
+		req.add
+		// req.onreadystatechange == function(input_color) {
+		// 	if (this.readyState == 4 && this.status == 200) {
+		// 		var dict = {"color": "#AAFF00"};
+		// 		req.send(JSON.stringify(dict));
+		// 	}
+		// }
+		req.open("POST", "/color.html", true);
+		req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+		// alert(input_color)
+		console.log(input_color)
+		console.log
+		var dict = {"color": input_color.toHEXString()};
+		var data = JSON.stringify(dict);
+		req.send(data);
+	}
+</script>
+
+<body>
+
 <form action="/color.html" method="post">
-	<input class="jscolor" name="color" onchange="this.form.submit()" value="{{ current }}">
+	<input class="jscolor {onFineChange:'send_color(this)'}" name="color" value="{{ current }}">
 </form>
 
 <form action="/rainbow.html" method="post">
 	<input type="submit" name="rainbow" value="rainbow">
 </form>
+</body>

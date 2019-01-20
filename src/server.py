@@ -2,9 +2,9 @@ from flask import Flask, request, render_template
 from light_utils import *
 
 app = Flask(__name__)
-app.run(host='0.0.0.0', port=5050, debug=True)
 
 stopper = Stopper()
+sem = threading.BoundedSemaphore(value=1)
 
 @app.route('/')
 def index():
@@ -15,11 +15,15 @@ def change_color():
 	error = None
 	if request.method == 'POST':
 		stopper.stop = True
-		color = request.form['color']
+		form = request.get_json(force=True)
+		app.logger.debug(form)
+		color = form['color']
 		color = hex_to_rgb(color)
+		sem.acquire()
 		show(color)
+		app.logger.debug(color)
 		stopper.stop = False
-		print(request.method)
+		sem.release()
 	else:
 		color = 'bad boy!'
 	return render_template('index.html', current=color)
@@ -30,5 +34,8 @@ def make_rainbow():
 	time.sleep(0.001)
 	if request.method == 'POST':
 		stopper.stop = False
-		rainbow(exit=stopper)
+		rainbow(exit=stopper, sem=sem)
 	return render_template('index.html', current='Rainbow!!!')
+
+if __name__ == '__main__':
+	app.run(host='0.0.0.0', port=5000)

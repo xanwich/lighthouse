@@ -11,6 +11,22 @@ class Stopper:
 	def __init__(self):
 		self.stop=False
 
+def semaphorize(sem, logger=None):
+	def f_wrap(func):
+		def a_wrap(*args, **kwargs):
+			if logger:
+				logger(f'semaphore acquiring {func.__name__}')
+			sem.acquire()
+			if logger:
+				logger(f'semaphore acquired {func.__name__}')
+			func(*args, **kwargs)
+			sem.release()
+			if logger:
+				logger(f'semaphore released {func.__name__}')
+		return a_wrap
+	return f_wrap
+
+
 def hex_to_rgb(hex):
 	h = hex.lstrip('#')
 	return tuple(int(h[i:i+2], 16) for i in (0, 2 ,4))
@@ -59,7 +75,7 @@ def  flash(colors, delay, exit=None):
 		i = (i+1) % l
 
 
-def fade(colors, lengths, exit=None, steps=500, action=show):
+def fade(colors, lengths, exit=None, sem=None, steps=500, action=show):
 	"""
 	fades between colors with specified lengths 
 	inputs:
@@ -69,6 +85,7 @@ def fade(colors, lengths, exit=None, steps=500, action=show):
 		exit: somehow an exit condition
 		repeat: start from the beginning if all colors shown
 	"""
+	sem.acquire()
 	if (not colors) or (not lengths):
 		return
 
@@ -94,21 +111,22 @@ def fade(colors, lengths, exit=None, steps=500, action=show):
 		color = interpolate(colors[i], colors[(i+1) % c], last, lengths[i], t)
 		action(color)
 		if exit.stop:
-			break
+			sem.release()
+			return
 		time.sleep(pause)
 
-def sunrise(length=dt.timedelta(seconds=30), exit=None, steps=500, action=show):
+def sunrise(length=dt.timedelta(seconds=30), exit=None, sem=None, steps=500, action=show):
 	colors = [(0,0,0), (255,0,0), (255,180,0), (255,255,255)]
 	lengths = [length/len(colors)]*(len(colors)-1)
 
-	fade(colors, lengths, exit=exit, steps=steps, action=action)
+	fade(colors, lengths, exit=exit, sem=sem, steps=steps, action=action)
 
 
-def rainbow(length=dt.timedelta(seconds=9), exit=None, steps=300, action=show):
+def rainbow(length=dt.timedelta(seconds=9), exit=None, sem=None, steps=300, action=show):
 	colors = [(255,0,0), (255,128,0), (0,255,0), (0,255, 200), (0,0,255), (255, 0, 255)]
 	lengths = [length/len(colors)]*(len(colors))
 
-	fade(colors, lengths, exit=exit, steps=steps, action=action)
+	fade(colors, lengths, exit=exit, sem=sem, steps=steps, action=action)
 
 
 def main():
