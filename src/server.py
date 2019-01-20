@@ -2,7 +2,6 @@ from flask import Flask, request, render_template
 from light_utils import *
 
 app = Flask(__name__)
-app.run(host='0.0.0.0', port=5050, debug=True)
 
 stopper = Stopper()
 sem = threading.BoundedSemaphore(value=1)
@@ -37,3 +36,6 @@ def make_rainbow():
 		stopper.stop = False
 		rainbow(exit=stopper, sem=sem)
 	return render_template('index.html', current='Rainbow!!!')
+
+if __name__ == '__main__':
+	app.run(host='0.0.0.0', port=5000)
