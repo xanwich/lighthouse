@@ -69,8 +69,13 @@ def save():
 	elif request.form['command'] == 'delete':
 		if stopper.current != 'rainbow':
 			saved_colors = stopper.saved_colors
-			app.logger.error(stopper.current)
-			saved_colors = saved_colors.drop(rgb_to_hex(stopper.current))
+			app.logger.error(stopper.saved_colors)
+			saved_colors = saved_colors[
+				(saved_colors['r'] != stopper.current[0]) |
+				(saved_colors['g'] != stopper.current[1]) |
+				(saved_colors['b'] != stopper.current[2])
+			]
+			app.logger.error(saved_colors)
 			stopper.saved_colors = saved_colors
 			stopper.saved_colors = save_colors(stopper.current, stopper.saved_colors, SAVED_COLORS)
 	return _index()
