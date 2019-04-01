@@ -45,9 +45,9 @@ def off():
 	stopper.stop = True
 	sem.acquire()
 	show((0, 0, 0))
-	app.logger.debug(color)
 	stopper.stop = False
 	sem.release()
+	return render_template('index.html', current='off')
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=5000)
