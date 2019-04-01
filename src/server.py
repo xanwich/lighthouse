@@ -7,7 +7,7 @@ app = Flask(__name__)
 stopper = Stopper()
 sem = threading.BoundedSemaphore(value=1)
 stopper.saved_colors = load_colors(SAVED_COLORS)
-stopper.saved_color_buttons = make_saved_color_buttons(saved_colors)
+stopper.saved_color_buttons = make_saved_color_buttons(stopper.saved_colors)
 
 def _index():
 	return render_template('index.html', saved_color_buttons=stopper.saved_color_buttons)
