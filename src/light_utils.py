@@ -146,8 +146,9 @@ def save_colors(color, saved_colors, path):
 	saves a color to the saved colors csv
 	color: (r, g, b)
 	"""
-	named_color = Color(*color)
-	saved_colors.loc[rgb_to_hex(color)] = named_color
+	if color != None:
+		named_color = Color(*color)
+		saved_colors.loc[rgb_to_hex(color)] = named_color
 	saved_colors.drop_duplicates().to_csv(path, index=False)
 	return saved_colors
 

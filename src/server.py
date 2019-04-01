@@ -9,6 +9,7 @@ sem = threading.BoundedSemaphore(value=1)
 stopper.saved_colors = load_colors(SAVED_COLORS)
 stopper.saved_color_buttons = make_saved_color_buttons(stopper.saved_colors)
 
+
 def _index():
 	hex_colors = [(rgb_to_hex(color), f'background-color:{rgb_to_hex(color, hash=True)}') for color in stopper.saved_colors[['r', 'g', 'b']].values]
 	return render_template('index.html', hex_colors=hex_colors)
@@ -69,15 +70,13 @@ def save():
 	elif request.form['command'] == 'delete':
 		if stopper.current != 'rainbow':
 			saved_colors = stopper.saved_colors
-			app.logger.error(stopper.saved_colors)
 			saved_colors = saved_colors[
 				(saved_colors['r'] != stopper.current[0]) |
 				(saved_colors['g'] != stopper.current[1]) |
 				(saved_colors['b'] != stopper.current[2])
 			]
-			app.logger.error(saved_colors)
 			stopper.saved_colors = saved_colors
-			stopper.saved_colors = save_colors(stopper.current, stopper.saved_colors, SAVED_COLORS)
+			stopper.saved_colors = save_colors(None, stopper.saved_colors, SAVED_COLORS)
 	return _index()
 
 @app.route('/saved_color.html', methods=['POST', 'GET'])
