@@ -16,6 +16,9 @@ SAVED_COLORS = 'saved_colors.csv'
 class Stopper:
 	def __init__(self):
 		self.stop=False
+		self.current=None
+		self.saved_colors=None
+		self.saved_color_buttons=None
 
 Color = namedtuple('Color', ['r', 'g', 'b'])
 
@@ -146,6 +149,7 @@ def save_colors(color, saved_colors, path):
 	named_color = Color(*color)
 	saved_colors.loc[len(saved_colors)] = named_color
 	saved_colors.to_csv(path, index=False)
+	return saved_colors
 
 def load_colors(path):
 	"""
@@ -167,7 +171,7 @@ def make_saved_color_buttons(saved_colors):
 	form_string = ['<form action="/saved_color.html" method="post">']
 	for color in saved_colors[['r', 'g', 'b']].values:
 		hex_color = rgb_to_hex(color)
-		form_string.append(f'\t<input type="submit" style="backgroundcolor:{hex_color}" value={hex_color} name="{hex_color}"')
+		form_string.append(f'\t<input type="submit" style="backgroundcolor:{hex_color}" value={hex_color} name="color"')
 	form_string.append('</form>')
 	return form_string
 
