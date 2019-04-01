@@ -40,7 +40,7 @@ def make_rainbow():
 		rainbow(exit=stopper, sem=sem)
 	return render_template('index.html', current='Rainbow!!!')
 
-@app.route('/off.html', methos=['POST', 'GET'])
+@app.route('/off.html', methods=['POST', 'GET'])
 def off():
 	stopper.stop = True
 	sem.acquire()
