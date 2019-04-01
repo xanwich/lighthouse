@@ -87,7 +87,7 @@ def saved_color():
 		stopper.stop = True
 		sem.acquire()
 		show(color)
-		current = color
+		stopper.current = color
 		stopper.stop = False
 		sem.release()
 	return _index()
