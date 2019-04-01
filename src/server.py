@@ -61,7 +61,7 @@ def off():
 
 @app.route('/save.html', methods=['POST', 'GET'])
 def save():
-	if current != 'rainbow':
+	if stopper.current != 'rainbow':
 		stopper.saved_colors = save_colors(stopper.current, stopper.saved_colors, SAVED_COLORS)
 		stopper.saved_color_buttons = make_saved_color_buttons(stopper.saved_colors)
 	return _index()
