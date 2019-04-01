@@ -10,7 +10,7 @@ stopper.saved_colors = load_colors(SAVED_COLORS)
 stopper.saved_color_buttons = make_saved_color_buttons(stopper.saved_colors)
 
 def _index():
-	return render_template('index.html', hex_colors=[rgb_to_hex(color), f'"backgroundcolor:{rgb_to_hex(color)}"' for color in stopper.saved_colors[['r', 'g', 'b']].values])
+	return render_template('index.html', hex_colors=[(rgb_to_hex(color), f'"backgroundcolor:{rgb_to_hex(color)}"') for color in stopper.saved_colors[['r', 'g', 'b']].values])
 
 @app.route('/')
 def index():
