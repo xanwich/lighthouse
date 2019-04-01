@@ -1,15 +1,23 @@
 import time
 import threading
 import datetime as dt
+import os
+from collections import namedtuple
+
+import pandas as pd
 import pigpio
 
 RED = 22
 BLUE = 17
 GREEN = 6 
 
+SAVED_COLORS = 'saved_colors.csv'
+
 class Stopper:
 	def __init__(self):
 		self.stop=False
+
+Color = namedtuple('Color', ['r', 'g', 'b'])
 
 def semaphorize(sem, logger=None):
 	def f_wrap(func):
@@ -31,8 +39,9 @@ def hex_to_rgb(hex):
 	h = hex.lstrip('#')
 	return tuple(int(h[i:i+2], 16) for i in (0, 2 ,4))
 
-def rgb_to_hex(rgb):
-	return None
+def rgb_to_hex(rgb, hash=False):
+	prefix = '#' if hash else ''
+	return prefix + f'{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}'
 
 
 def interpolate(l, r, t0, dt, t):
@@ -127,6 +136,40 @@ def rainbow(length=dt.timedelta(seconds=9), exit=None, sem=None, steps=300, acti
 	lengths = [length/len(colors)]*(len(colors))
 
 	fade(colors, lengths, exit=exit, sem=sem, steps=steps, action=action)
+
+
+def save_colors(color, saved_colors, path):
+	"""
+	saves a color to the saved colors csv
+	color: (r, g, b)
+	"""
+	named_color = Color(*color)
+	saved_colors.loc[len(saved_colors)] = named_color
+	saved_colors.to_csv(path, index=False)
+
+def load_colors(path):
+	"""
+	loads saved colors from csv
+	returns pandas df of saved colors
+	"""
+	# if os.path.exists(path):
+	try:
+		saved_colors = pd.read_csv(path, header=0)
+	except:
+		saved_colors = pd.DataFrame(columns=['r', 'g', 'b'])
+		saved_colors.to_csv(path, index=False)
+	return saved_colors
+
+def make_saved_color_buttons(saved_colors):
+	"""
+	makes html to load saved colors
+	"""
+	form_string = ['<form action="/saved_color.html" method="post">']
+	for color in saved_colors[['r', 'g', 'b']].values:
+		hex_color = rgb_to_hex(color)
+		form_string.append(f'\t<input type="submit" style="backgroundcolor:{hex_color}" value={hex_color} name="{hex_color}"')
+	form_string.append('</form>')
+	return form_string
 
 
 def main():

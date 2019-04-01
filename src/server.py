@@ -1,14 +1,20 @@
 from flask import Flask, request, render_template
+
 from light_utils import *
 
 app = Flask(__name__)
 
 stopper = Stopper()
 sem = threading.BoundedSemaphore(value=1)
+stopper.saved_colors = load_colors(SAVED_COLORS)
+stopper.saved_color_buttons = make_saved_color_buttons(saved_colors)
+
+def _index():
+	return render_template('index.html', saved_color_buttons=stopper.saved_color_buttons)
 
 @app.route('/')
 def index():
-	return render_template('index.html')
+	return _index()
 
 @app.route('/color.html', methods=['POST', 'GET'])
 def change_color():
@@ -24,12 +30,13 @@ def change_color():
 		# wait until threads have actually stopped
 		sem.acquire()
 		show(color)
+		stopper.current=color
 		app.logger.debug(color)
 		stopper.stop = False
 		sem.release()
 	else:
 		color = 'bad boy!'
-	return render_template('index.html', current=color)
+	return _index()
 
 @app.route('/rainbow.html', methods=['POST', 'GET'])
 def make_rainbow():
@@ -38,16 +45,41 @@ def make_rainbow():
 	if request.method == 'POST':
 		stopper.stop = False
 		rainbow(exit=stopper, sem=sem)
-	return render_template('index.html', current='Rainbow!!!')
+		stopper.current='rainbow'
+		current = 'rainbow'
+	return _index()
 
 @app.route('/off.html', methods=['POST', 'GET'])
 def off():
 	stopper.stop = True
 	sem.acquire()
 	show((0, 0, 0))
+	current = (0, 0, 0)
 	stopper.stop = False
 	sem.release()
-	return render_template('index.html', current='off')
+	return _index()
+
+@app.route('/save.html', methods=['POST', 'GET'])
+def save():
+	if current != 'rainbow':
+		stopper.saved_colors = save_colors(current, saved_colors, SAVED_COLORS)
+		stopper.saved_color_buttons = make_saved_color_buttons(saved_colors)
+	return _index()
+
+@app.route('/saved_color.html', methods=['POST', 'GET'])
+def saved_color():
+	app.logger.debug(dir(request))
+	if request.method == 'POST':
+		color = request.form('color')
+		color = hex_to_rgb(color)
+		stopper.stop = True
+		sem.acquire()
+		show(color)
+		current = color
+		stopper.stop = False
+		sem.release()
+	return _index()
+
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=5000)
