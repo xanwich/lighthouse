@@ -68,7 +68,7 @@ def save():
 			stopper.saved_color_buttons = make_saved_color_buttons(stopper.saved_colors)
 	elif request.form['command'] == 'delete':
 		saved_colors = stopper.saved_colors
-		logger.error(stopper.current)
+		app.logger.error(stopper.current)
 		saved_colors = saved_colors[
 			(saved_colors['r'] != stopper.current[0]) |
 			(saved_colors['g'] != stopper.current[1]) |
