@@ -70,7 +70,7 @@ def save():
 		if stopper.current != 'rainbow':
 			saved_colors = stopper.saved_colors
 			app.logger.error(stopper.current)
-			saved_colors = saved_colors.drop(stopper.current)
+			saved_colors = saved_colors.drop(rgb_to_hex(stopper.current))
 			stopper.saved_colors = saved_colors
 			stopper.saved_colors = save_colors(stopper.current, stopper.saved_colors, SAVED_COLORS)
 	return _index()

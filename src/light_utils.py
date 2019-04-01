@@ -147,7 +147,7 @@ def save_colors(color, saved_colors, path):
 	color: (r, g, b)
 	"""
 	named_color = Color(*color)
-	saved_colors.loc[len(saved_colors)] = named_color
+	saved_colors.loc[rgb_to_hex(color)] = named_color
 	saved_colors.drop_duplicates().to_csv(path, index=False)
 	return saved_colors
 
