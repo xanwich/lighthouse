@@ -47,8 +47,8 @@
 &nbsp;
 
 <form action="/saved_color.html" method="post">
-{% for color in hex_colors %}
-	<input type="submit" style="backgroundcolor:{color}" value={color} name="color">
+{% for color, color_string in hex_colors %}
+	<input type="submit" style={color_string} value={color} name="color">
 {% endfor %}
 </form>
 </body>
