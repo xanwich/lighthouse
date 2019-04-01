@@ -173,7 +173,7 @@ def make_saved_color_buttons(saved_colors):
 		hex_color = rgb_to_hex(color)
 		form_string.append(f'\t<input type="submit" style="backgroundcolor:{hex_color}" value={hex_color} name="color"')
 	form_string.append('</form>')
-	return form_string
+	return '\n'.join(form_string)
 
 
 def main():
